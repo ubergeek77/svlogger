@@ -2,15 +2,12 @@ pkgname=svlogger
 pkgver=1.0.0
 pkgrel=1
 pkgdesc="A generic svlogd wrapper for runit services"
-url="https://github.com/ubergeek77/svlogger"
 license=("MIT")
-source=("git+$url")
-md5sums=('SKIP')
 arch=("x86_64")
 provides=("svlogger")
 
 package() {
-    cd $pkgname
+    cd ..
     usrdir="$pkgdir/usr"
     mkdir -p $usrdir
     localddir="$pkgdir/etc/local.d"
