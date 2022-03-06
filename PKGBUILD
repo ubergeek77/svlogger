@@ -13,5 +13,8 @@ package() {
     cd $pkgname
     usrdir="$pkgdir/usr"
     mkdir -p $usrdir
+    localddir="$pkgdir/etc/local.d"
+    mkdir -p $localddir
     install -Dm 755 "${pkgname}" "${pkgdir}/usr/bin/${pkgname}"
+    install -Dm 755 "${pkgname}.start" "${localddir}/${pkgname}.start"
 }
