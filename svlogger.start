@@ -3,6 +3,13 @@
 # Script for automatically enabling logs on system start via /etc/local.d/
 # Made for use in Artix Linux
 
+# Do nothing if svlogger is not found
+if ! command -v svlogger; then
+    echo "svlogger not found"
+    exit 1;
+fi
+
+
 # Enable logging for all services
 for svc in /etc/runit/sv/* ; do
     # Exclude agetty-tty services
@@ -20,6 +27,6 @@ for svc in /etc/runit/sv/* ; do
     # Enable the logger if it doesn't already exist
     [[ -f "$svc/log/run" ]] && continue
     mkdir -p "$svc/log"
-    ln -s /etc/sv/svlogger "$svc/log/run"
+    ln -s $(which svlogger) "$svc/log/run"
     chmod +x "$svc/log/run"
 done
