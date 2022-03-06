@@ -14,7 +14,7 @@
 # License: MIT
 
 # Logs will be written to $logdirbase/$servicename/
-logdirbase=${1:-/tmp/sv/log}
+logdirbase=${1:-/var/log/sv}
 
 # Arguments to pass to `svlogd`
 svlogdargs=('-tt')
