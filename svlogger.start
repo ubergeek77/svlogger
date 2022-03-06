@@ -9,6 +9,8 @@ if ! command -v svlogger; then
     exit 1;
 fi
 
+# Export the path to svlogger
+SVLOGGER_PATH="$(which svlogger)"
 
 # Enable logging for all services
 for svc in /etc/runit/sv/* ; do
@@ -27,6 +29,6 @@ for svc in /etc/runit/sv/* ; do
     # Enable the logger if it doesn't already exist
     [[ -f "$svc/log/run" ]] && continue
     mkdir -p "$svc/log"
-    ln -s $(which svlogger) "$svc/log/run"
+    ln -s ${SVLOGGER_PATH} "$svc/log/run"
     chmod +x "$svc/log/run"
 done
