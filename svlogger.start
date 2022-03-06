@@ -1,0 +1,25 @@
+#!/bin/bash
+
+# Script for automatically enabling logs on system start via /etc/local.d/
+# Made for use in Artix Linux
+
+# Enable logging for all services
+for svc in /etc/runit/sv/* ; do
+    # Exclude agetty-tty services
+    [[ $(basename "$svc") == agetty-tty* ]] && continue
+
+    # Excude services that have explicitly disabled this feature
+    [[ -f "$svc/.nosvlogger" ]] && continue
+
+    # Make runit log all messages for the service by adding exec 2>&1
+    # Add after the hashbang
+    grep -q '^exec 2>&1' "$svc/run" || {
+        sed -i '/#!/a exec 2>&1 # added by /etc/local.d/svlogger.start' "$svc/run"
+    }
+
+    # Enable the logger if it doesn't already exist
+    [[ -f "$svc/log/run" ]] && continue
+    mkdir -p "$svc/log"
+    ln -s /etc/sv/svlogger "$svc/log/run"
+    chmod +x "$svc/log/run"
+done
