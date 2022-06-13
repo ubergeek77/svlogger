@@ -9,12 +9,22 @@
 # Alternatively, this script can be called with an optional first argument to
 # specify the service log base directory; the default is `/tmp/sv/log`.
 #
-# Author: Dave Eddy <dave@daveeddy.com>
+# Original Author: Dave Eddy <dave@daveeddy.com>
 # Date: September 17, 2018
 # License: MIT
+#
+# Modified by: ubergeek77
+# Last modified: June 12th, 2022
 
 # Logs will be written to $logdirbase/$servicename/
-logdirbase=${1:-/var/log/sv}
+# Choose logdirbase depending on if we are root or not
+# Non-root services will log to ~/.runit/log
+if [ "$EUID" -ne 0 ]; then
+	USERHOME="$(echo ~$(whoami))"
+	logdirbase=${1:-${USERHOME:?}/.runit/log}
+else
+	logdirbase=${1:-/var/log/sv}
+fi
 
 # Arguments to pass to `svlogd`
 svlogdargs=('-tt')

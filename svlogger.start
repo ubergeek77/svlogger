@@ -4,7 +4,7 @@
 # Made for use in Artix Linux
 
 # Do nothing if svlogger is not found
-if ! command -v svlogger; then
+if ! command -v svlogger >/dev/null; then
     echo "svlogger not found"
     exit 1;
 fi
@@ -12,8 +12,19 @@ fi
 # Export the path to svlogger
 SVLOGGER_PATH="$(which svlogger)"
 
+# Get the available-service directory based on current user
+# Root: /etc/runit/sv/
+# Non-Root: ~/.runit/sv
+# Can be overridden by $1
+if [ "$EUID" -ne 0 ]; then
+    servicedir=${1:-$HOME/.runit/sv}
+else
+    servicedir=${1:-/etc/runit/sv/}
+fi
+
 # Enable logging for all services
-for svc in /etc/runit/sv/* ; do
+echo "svlogger.start: using service directory: $servicedir"
+for svc in $servicedir/* ; do
     # Exclude agetty-tty services
     [[ $(basename "$svc") == agetty-tty* ]] && continue
 
@@ -30,5 +41,5 @@ for svc in /etc/runit/sv/* ; do
     [[ -f "$svc/log/run" ]] && continue
     mkdir -p "$svc/log"
     ln -s ${SVLOGGER_PATH} "$svc/log/run"
-    chmod +x "$svc/log/run"
+    echo "svlogger.start: enabled logging for $svc"
 done
