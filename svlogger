@@ -20,7 +20,7 @@
 # Choose logdirbase depending on if we are root or not
 # Non-root services will log to ~/.runit/log
 if [ "$EUID" -ne 0 ]; then
-	USERHOME="$(echo ~$(whoami))"
+	USERHOME="$(eval echo "~$(whoami)")"
 	logdirbase=${1:-${USERHOME:?}/.runit/log}
 else
 	logdirbase=${1:-/var/log/sv}
