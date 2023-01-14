@@ -10,7 +10,7 @@ if ! command -v svlogger >/dev/null; then
 fi
 
 # Export the path to svlogger
-SVLOGGER_PATH="$(which svlogger)"
+SVLOGGER_PATH="/usr/bin/svlogger"
 
 # Get the available-service directory based on current user
 # Root: /etc/runit/sv/
